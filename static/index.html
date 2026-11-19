@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>El-Sharnouby Group | Executive CEO Intelligence Platform</title>
+  <meta name="description" content="Sales-led executive enterprise operating dashboard & AI strategic analyst for LEO MODA, TEX, PRINT, PRODUCTION.">
+  
+  <!-- FontAwesome & Google Fonts -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Custom Design System -->
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Chart.js and Marked.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body>
+
+<div id="app-layout">
+  
+  <!-- =========================================================================
+       SIDEBAR & GLOBAL FILTERS
+       ========================================================================= -->
+  <aside id="sidebar">
+    <div class="sidebar-header">
+      <div class="brand-emblem">
+        <div>
+          <img src="logo/images.jpg" alt="El-Sharnouby Group Logo" class="brand-icon">
+          <div class="brand-title">EL-SHARNOUBY</div>
+          <div class="brand-subtitle">Executive Enterprise</div>
+        </div>
+      </div>
+      <div style="font-size: 0.68rem; color: var(--text-dim); margin-top: 4px;">
+        LEO MODA · TEX · PRINT · PRODUCTION
+      </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="nav-section">
+      <div class="nav-label">Workspaces</div>
+      <ul class="nav-list">
+        <li class="nav-item active" data-view="view-ceo-home" id="nav-ceo-home">
+          <i class="fa-solid fa-compass"></i> CEO Home
+        </li>
+        <li class="nav-item" data-view="view-sales-command" id="nav-sales-command">
+          <i class="fa-solid fa-chart-line"></i> Sales Command Center
+        </li>
+        <li class="nav-item" data-view="view-products" id="nav-products">
+          <i class="fa-solid fa-shirt"></i> Products & Mix
+        </li>
+        <li class="nav-item" data-view="view-customers" id="nav-customers">
+          <i class="fa-solid fa-users"></i> Customers (RFM)
+        </li>
+        <li class="nav-item" data-view="view-channels" id="nav-channels">
+          <i class="fa-solid fa-store"></i> Channels & Markets
+        </li>
+        <li class="nav-item" data-view="view-operations" id="nav-operations">
+          <i class="fa-solid fa-industry"></i> Operations Pulse
+        </li>
+        <li class="nav-item" data-view="view-explorer" id="nav-explorer">
+          <i class="fa-solid fa-table-list"></i> Data Explorer
+        </li>
+        <li class="nav-item" data-view="view-chat" id="nav-chat">
+          <i class="fa-solid fa-brain"></i> Chat with your data
+          <span class="nav-badge-ai">AI Advisor</span>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Global Filters -->
+    <div class="filters-section">
+      <div class="filters-header">
+        <span class="filters-title"><i class="fa-solid fa-sliders"></i> Global Filters</span>
+        <button class="btn-reset-filters" id="btn-reset-filters" title="Reset all filters">Reset</button>
+      </div>
+
+      <!-- Date Range -->
+      <div class="filter-group">
+        <label>Order Date Window</label>
+        <div class="date-presets">
+          <button class="btn-preset active" data-preset="all">All</button>
+          <button class="btn-preset" data-preset="2026">2026</button>
+          <button class="btn-preset" data-preset="2025">2025</button>
+          <button class="btn-preset" data-preset="2024">2024</button>
+          <button class="btn-preset" data-preset="90d">Last 90d</button>
+          <button class="btn-preset" data-preset="30d">Last 30d</button>
+        </div>
+        <div class="date-inputs">
+          <input type="date" id="filter-start-date" title="Start Date">
+          <input type="date" id="filter-end-date" title="End Date">
+        </div>
+      </div>
+
+      <!-- Channel Multi-select -->
+      <div class="filter-group">
+        <label>Channels (<span id="count-selected-channels">All</span>)</label>
+        <div class="chip-container" id="container-channels"></div>
+      </div>
+
+      <!-- Product Family Multi-select -->
+      <div class="filter-group">
+        <label>Product Families (<span id="count-selected-families">All</span>)</label>
+        <div class="chip-container" id="container-families"></div>
+      </div>
+
+      <!-- Locations Multi-select -->
+      <div class="filter-group">
+        <label>Locations (<span id="count-selected-locations">All</span>)</label>
+        <div class="chip-container" id="container-locations"></div>
+      </div>
+
+      <!-- Customer Types Multi-select -->
+      <div class="filter-group">
+        <label>Customer Types (<span id="count-selected-cust-types">All</span>)</label>
+        <div class="chip-container" id="container-cust-types"></div>
+      </div>
+
+      <!-- Return lines filter -->
+      <div class="filter-group">
+        <label class="switch-label">
+          <input type="checkbox" id="filter-hide-returns"> Exclude returned lines
+        </label>
+      </div>
+
+      <button class="btn-apply-filters" id="btn-apply-filters">
+        <i class="fa-solid fa-rotate"></i> Apply Filters
+      </button>
+    </div>
+  </aside>
+
+  <!-- =========================================================================
+       MAIN EXECUTIVE DASHBOARD BODY
+       ========================================================================= -->
+  <main id="main-content">
+    
+    <!-- Top Sticky Bar -->
+    <header class="top-bar">
+      <div class="top-bar-left">
+        <h1 class="page-title" id="page-heading">CEO Home</h1>
+        <div class="filter-summary-pill" id="filter-status-pill">
+          <i class="fa-solid fa-filter"></i> <span id="pill-text">All Data (180,000 lines)</span>
+        </div>
+      </div>
+      <div class="top-bar-right">
+        <div class="status-badge">
+          <span class="status-dot"></span>
+          <span>FastAPI Live Engine</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- =======================================================================
+         VIEW 1: CEO HOME
+         ======================================================================= -->
+    <section class="workspace-view active" id="view-ceo-home">
+      <div class="hero-banner">
+        <div class="hero-title">CEO Dashboard — El-Sharnouby Group</div>
+        <div class="hero-subtitle" id="ceo-hero-sub">
+          Sales-led operating picture for LEO MODA · Multi-year enterprise dataset
+        </div>
+      </div>
+
+      <!-- Primary 6 KPIs -->
+      <div class="metrics-grid" id="ceo-metrics-row"></div>
+
+      <!-- Top Charts: Revenue vs Profit + Net Sales by Channel -->
+      <div class="grid-2col">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title"><i class="fa-solid fa-chart-column" style="color: var(--gold-primary);"></i> Revenue vs. Gross Profit</div>
+              <div class="card-subtitle">Monthly Net Sales (Bars) and Gross Profit (Line in Gold)</div>
+            </div>
+          </div>
+          <div class="chart-container">
+            <canvas id="chart-ceo-rev-profit"></canvas>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title"><i class="fa-solid fa-chart-pie" style="color: var(--teal-light);"></i> Net Sales by Channel</div>
+              <div class="card-subtitle">Retail vs Wholesale vs Online mix</div>
+            </div>
+          </div>
+          <div class="chart-container">
+            <canvas id="chart-ceo-channel"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Group Operations Status -->
+      <div class="card" style="margin-bottom: 1.4rem;">
+        <div class="card-header">
+          <div class="card-title"><i class="fa-solid fa-cubes-stacked" style="color: var(--slate-light);"></i> Group Operations (Business Units)</div>
+          <div class="card-subtitle">Latest active month volume & efficiency</div>
+        </div>
+        <div class="ops-grid" id="ceo-group-ops-grid"></div>
+      </div>
+
+      <!-- Management Signals & Watchouts -->
+      <div class="grid-equal">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><i class="fa-solid fa-lightbulb" style="color: var(--gold-primary);"></i> Management Signals</div>
+          </div>
+          <div id="ceo-signals-container"></div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><i class="fa-solid fa-triangle-exclamation" style="color: var(--coral-light);"></i> Watch-outs & Friction</div>
+          </div>
+          <div id="ceo-watchouts-container"></div>
+        </div>
+      </div>
+
+      <!-- Secondary Operational KPIs -->
+      <div class="grid-4col" id="ceo-op-kpis" style="margin-top: 1.4rem;"></div>
+    </section>
+
+    <!-- =======================================================================
+         VIEW 2: SALES COMMAND CENTER
+         ======================================================================= -->
+    <section class="workspace-view" id="view-sales-command">
+      <div class="metrics-grid" id="sales-metrics-primary"></div>
+      <div class="metrics-grid" id="sales-metrics-secondary"></div>
+
+      <!-- Monthly Sales & Profit trajectory -->
+      <div class="card" style="margin-bottom: 1.4rem;">
+        <div class="card-header">
+          <div class="card-title"><i class="fa-solid fa-wave-square" style="color: var(--gold-primary);"></i> Monthly Sales & Gross Profit Trajectory</div>
+          <div class="card-subtitle">Continuous historical trend of top-line and profit generation</div>
+        </div>
+        <div class="chart-container tall">
+          <canvas id="chart-sales-trajectory"></canvas>
+        </div>
+      </div>
+
+      <!-- Trajectory & Discount / Returns -->
+      <div class="grid-equal">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><i class="fa-solid fa-percent" style="color: var(--teal-light);"></i> Gross Margin Trajectory</div>
+            <div class="card-subtitle">Margin % fluctuations over monthly cycles</div>
+          </div>
+          <div class="chart-container">
+            <canvas id="chart-margin-trajectory"></canvas>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><i class="fa-solid fa-scale-unbalanced" style="color: var(--coral-light);"></i> Discount Pressure vs Return Rate</div>
+            <div class="card-subtitle">Comparing average discount % against return rates</div>
+          </div>
+          <div class="chart-container">
+            <canvas id="chart-discount-returns"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Seasonality Heatmap & Discount Bands -->
+      <div class="card" style="margin-bottom: 1.4rem;">
+        <div class="card-header">
+          <div class="card-title"><i class="fa-solid fa-calendar-days" style="color: var(--gold-light);"></i> Seasonality — Net Sales by Channel & Calendar Month (Jan–Dec)</div>
+        </div>
+        <div class="table-responsive">
+          <table class="enterprise-table" id="table-seasonality"></table>
+        </div>
+      </div>
+
+      <div class="grid-equal">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><i class="fa-solid fa-tags" style="color: var(--coral-light);"></i> Sales by Discount Band</div>
+            <div class="card-subtitle">Volume vs gross margin degradation by discount level</div>
+          </div>
+          <div class="chart-container">
+            <canvas id="chart-discount-bands"></canvas>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><i class="fa-solid fa-credit-card" style="color: var(--slate-light);"></i> Net Sales by Payment Method</div>
+          </div>
+          <div class="chart-container">
+            <canvas id="chart-payment-methods"></canvas>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         VIEW 3: PRODUCTS & MIX
+         ======================================================================= -->
+    <section class="workspace-view" id="view-products">
+      <div class="metrics-grid" id="products-kpis"></div>
+
+      <!-- Family Contribution -->
+      <div class="card" style="margin-bottom: 1.4rem;">
+        <div class="card-header">
+          <div class="card-title"><i class="fa-solid fa-cubes" style="color: var(--gold-primary);"></i> Product Family Contribution</div>
+          <div class="card-subtitle">Net sales & profitability across apparel categories</div>
+        </div>
+        <div class="chart-container">
+          <canvas id="chart-family-contribution"></canvas>
+        </div>
+      </div>
+
+      <!-- Top 15 SKUs & Volume vs Margin Scatter -->
+      <div class="grid-equal">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><i class="fa-solid fa-ranking-star" style="color: var(--gold-light);"></i> Top 15 SKUs by Net Sales</div>
+          </div>
+          <div class="chart-container tall">
+            <canvas id="chart-top-skus"></canvas>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><i class="fa-solid fa-chart-line" style="color: var(--teal-light);"></i> Top 25 SKU Pareto Analysis</div>
+            <div class="card-subtitle">Net Sales & Cumulative % Share (Funding the P&L)</div>
+          </div>
+          <div class="chart-container tall">
+            <canvas id="chart-pareto"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Top 40 SKU Table -->
+      <div class="card" style="margin-bottom: 1.4rem;">
+        <div class="card-header">
+          <div class="card-title"><i class="fa-solid fa-list-check" style="color: var(--slate-light);"></i> Product Performance Ledger (Top 40 SKUs)</div>
+        </div>
+        <div class="table-responsive">
+          <table class="enterprise-table" id="table-sku-top40">
+            <thead>
+              <tr>
+                <th>SKU</th>
+                <th>Product Name</th>
+                <th>Family</th>
+                <th>Net Sales (EGP)</th>
+                <th>Gross Profit</th>
+                <th>Margin</th>
+                <th>Returns</th>
+                <th>Quality Returns</th>
+                <th>Avg Discount</th>
+                <th>Cum. Share</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Return Reasons -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><i class="fa-solid fa-rotate-left" style="color: var(--coral-light);"></i> Refund Value by Return Reason</div>
+        </div>
+        <div class="chart-container">
+          <canvas id="chart-return-reasons"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         VIEW 4: CUSTOMERS (RFM)
+         ======================================================================= -->
+    <section class="workspace-view" id="view-customers">
+      <div class="metrics-grid" id="customers-kpis"></div>
+
+      <!-- RFM Segments Bar Chart -->
+      <div class="card" style="margin-bottom: 1.4rem;">
+        <div class="card-header">
+          <div class="card-title"><i class="fa-solid fa-crown" style="color: var(--gold-primary);"></i> RFM Customer Segments</div>
+          <div class="card-subtitle">Champions, Loyal, Promising, At Risk, Hibernating</div>
+        </div>
+        <div class="chart-container">
+          <canvas id="chart-rfm-segments"></canvas>
+        </div>
+      </div>
+
+      <!-- Acquisition Channels & Age Bands -->
+      <div class="grid-equal">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><i class="fa-solid fa-bullhorn" style="color: var(--teal-light);"></i> Sales by Acquisition Channel</div>
+          </div>
+          <div class="chart-container">
+            <canvas id="chart-acquisition"></canvas>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><i class="fa-solid fa-id-card" style="color: var(--slate-light);"></i> Sales by Age Band</div>
+          </div>
+          <div class="chart-container">
+            <canvas id="chart-age-bands"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Highest Value Customers Table -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><i class="fa-solid fa-gem" style="color: var(--gold-light);"></i> Highest-Value Customers (Top 30)</div>
+        </div>
+        <div class="table-responsive">
+          <table class="enterprise-table" id="table-top-customers">
+            <thead>
+              <tr>
+                <th>Customer ID</th>
+                <th>Type</th>
+                <th>Governorate</th>
+                <th>Recency (Days)</th>
+                <th>Orders</th>
+                <th>Net Spend (EGP)</th>
+                <th>Segment</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         VIEW 5: CHANNELS & MARKETS
+         ======================================================================= -->
+    <section class="workspace-view" id="view-channels">
+      <div class="metrics-grid" id="channels-kpis"></div>
+
+      <!-- Channel x Location Summary Table -->
+      <div class="card" style="margin-bottom: 1.4rem;">
+        <div class="card-header">
+          <div class="card-title"><i class="fa-solid fa-building" style="color: var(--gold-primary);"></i> Channel & Location Performance Matrix</div>
+        </div>
+        <div class="table-responsive">
+          <table class="enterprise-table" id="table-channel-location">
+            <thead>
+              <tr>
+                <th>Channel</th>
+                <th>Location</th>
+                <th>Net Sales (EGP)</th>
+                <th>Gross Profit</th>
+                <th>Margin</th>
+                <th>AOV</th>
+                <th>Units Sold</th>
+                <th>Return Rate</th>
+                <th>Avg Discount</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Channel Mix Over Time & Governorate Demand -->
+      <div class="grid-equal">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><i class="fa-solid fa-layer-group" style="color: var(--teal-light);"></i> Channel Mix Over Time</div>
+            <div class="card-subtitle">Monthly net sales distribution across channels</div>
+          </div>
+          <div class="chart-container">
+            <canvas id="chart-channel-mix"></canvas>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><i class="fa-solid fa-map-location-dot" style="color: var(--coral-light);"></i> Demand by Governorate</div>
+          </div>
+          <div class="chart-container">
+            <canvas id="chart-governorates"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Digital E-Commerce Funnel -->
+      <div class="card" id="digital-funnel-card">
+        <div class="card-header">
+          <div class="card-title"><i class="fa-solid fa-globe" style="color: var(--slate-light);"></i> Digital Funnel (Online D2C)</div>
+        </div>
+        <div class="grid-4col" id="digital-kpis" style="margin-bottom: 1rem;"></div>
+        <div class="chart-container short">
+          <canvas id="chart-web-conv"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         VIEW 6: OPERATIONS PULSE
+         ======================================================================= -->
+    <section class="workspace-view" id="view-operations">
+      <div class="metrics-grid" id="ops-top-kpis"></div>
+
+      <!-- Days of Cover Histogram & Low Cover SKUs -->
+      <div class="grid-equal">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><i class="fa-solid fa-boxes-stacked" style="color: var(--gold-primary);"></i> Days of Cover Distribution</div>
+            <div class="card-subtitle">SKU count by inventory cover bands</div>
+          </div>
+          <div class="chart-container">
+            <canvas id="chart-cover-hist"></canvas>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><i class="fa-solid fa-triangle-exclamation" style="color: var(--coral-light);"></i> Critical Low-Cover SKUs (&lt; 20 Days)</div>
+            <div class="card-subtitle">Immediate stockout risk requiring replenishment</div>
+          </div>
+          <div class="table-responsive" style="max-height: 320px;">
+            <table class="enterprise-table" id="table-low-cover">
+              <thead>
+                <tr>
+                  <th>Location</th>
+                  <th>SKU</th>
+                  <th>Product</th>
+                  <th>Stock</th>
+                  <th>Cover (Days)</th>
+                  <th>Stockouts</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- QC Defects & Factory Bottlenecks -->
+      <div class="grid-equal">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><i class="fa-solid fa-bug" style="color: var(--coral-light);"></i> Cost of Poor Quality (Defect Pareto)</div>
+            <div class="card-subtitle">Estimated financial losses in EGP</div>
+          </div>
+          <div class="chart-container">
+            <canvas id="chart-defects"></canvas>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><i class="fa-solid fa-gears" style="color: var(--slate-light);"></i> Production Bottlenecks & Factory Delays</div>
+          </div>
+          <div class="chart-container">
+            <canvas id="chart-bottlenecks"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Marketing Platform Efficiency & Customer Service -->
+      <div class="grid-equal">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><i class="fa-solid fa-bullseye" style="color: var(--gold-light);"></i> Marketing Platform ROAS</div>
+          </div>
+          <div class="table-responsive">
+            <table class="enterprise-table" id="table-marketing">
+              <thead>
+                <tr>
+                  <th>Platform</th>
+                  <th>Spend</th>
+                  <th>Attributed Rev</th>
+                  <th>Orders</th>
+                  <th>ROAS</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><i class="fa-solid fa-headset" style="color: var(--teal-light);"></i> Customer Service Operations</div>
+          </div>
+          <div class="grid-3col" id="service-kpis" style="margin-bottom: 1rem;"></div>
+          <div class="chart-container short">
+            <canvas id="chart-service-tickets"></canvas>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         VIEW 7: DATA EXPLORER
+         ======================================================================= -->
+    <section class="workspace-view" id="view-explorer">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title"><i class="fa-solid fa-database" style="color: var(--gold-primary);"></i> Filtered Sales Ledger Explorer</div>
+            <div class="card-subtitle">Inspect, query and export the exact transaction slice active in the dashboard</div>
+          </div>
+          <button class="btn-download-csv" id="btn-export-csv">
+            <i class="fa-solid fa-file-csv"></i> Download Filtered CSV
+          </button>
+        </div>
+
+        <div class="explorer-toolbar">
+          <div class="search-input-box">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="explorer-search" placeholder="Search SKU, Product Name, Invoice ID, or Customer ID...">
+          </div>
+          <div class="pagination-controls">
+            <span id="explorer-row-count">Loading...</span>
+            <button class="btn-page" id="btn-prev-page" disabled><i class="fa-solid fa-chevron-left"></i></button>
+            <span id="explorer-page-num">1 / 1</span>
+            <button class="btn-page" id="btn-next-page" disabled><i class="fa-solid fa-chevron-right"></i></button>
+          </div>
+        </div>
+
+        <div class="table-responsive" style="max-height: 540px;">
+          <table class="enterprise-table" id="table-explorer">
+            <thead id="thead-explorer"></thead>
+            <tbody id="tbody-explorer"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         VIEW 8: CHAT WITH YOUR DATA (AI STRATEGIC ADVISOR)
+         ======================================================================= -->
+    <section class="workspace-view" id="view-chat">
+      <div class="chat-layout">
+        
+        <!-- Guardrail Banner -->
+        <div class="guardrail-bar">
+          <span class="chat-badge badge-green">● Gemini 3.8 Flash Active</span>
+          <span class="chat-badge badge-gold"><i class="fa-solid fa-shield-halved"></i> Guardrails Enforced</span>
+          <span class="chat-badge badge-blue"><i class="fa-solid fa-database"></i> Real-Time Data Grounding</span>
+          <span style="font-size: 0.82rem; color: #cbd5e1; margin-left: 8px;">
+            Strictly restricted to El-Sharnouby Group datasets & executive business analysis. Public/unrelated queries are politely refused.
+          </span>
+        </div>
+
+        <!-- Scope & Clear Actions -->
+        <div class="chat-header-actions">
+          <div class="scope-selector">
+            <span>Query Data Scope:</span>
+            <button class="scope-btn active" data-scope="Active Filtered Slice" id="btn-scope-filtered">
+              Active Filtered Slice (<span id="chat-scope-count">Filtered</span>)
+            </button>
+            <button class="scope-btn" data-scope="Full Historical Database" id="btn-scope-all">
+              Full Historical Database (180K lines)
+            </button>
+          </div>
+          <button class="btn-reset-filters" id="btn-clear-chat" style="font-size: 0.8rem; padding: 5px 12px;">
+            <i class="fa-solid fa-trash-can"></i> Clear Chat
+          </button>
+        </div>
+
+        <!-- Quick Prompts Cards -->
+        <div class="quick-prompts-grid">
+          <div class="quick-prompt-btn" data-prompt="Which sales channel generates the highest gross profit margin, and how can we optimize wholesale vs retail mix?">
+            <i class="fa-solid fa-coins"></i> Channel Margin Spread
+          </div>
+          <div class="quick-prompt-btn" data-prompt="Which SKUs currently have critical inventory cover under 20 days and risk immediate stockouts?">
+            <i class="fa-solid fa-boxes-packing"></i> Low-Cover SKUs (&lt;20 Days)
+          </div>
+          <div class="quick-prompt-btn" data-prompt="What are our primary production bottlenecks and factory delay drivers?">
+            <i class="fa-solid fa-industry"></i> Factory Bottlenecks
+          </div>
+          <div class="quick-prompt-btn" data-prompt="Compare marketing ROAS across platforms (Meta, Google, TikTok) and recommend budget reallocation.">
+            <i class="fa-solid fa-bullseye"></i> Marketing ROAS Breakdown
+          </div>
+          <div class="quick-prompt-btn" data-prompt="What are our largest quality defect types and total estimated financial losses in EGP?">
+            <i class="fa-solid fa-microscope"></i> Quality Loss Pareto
+          </div>
+          <div class="quick-prompt-btn" data-prompt="What is our customer repeat purchase rate, and how are our Champions vs At-Risk customer segments performing?">
+            <i class="fa-solid fa-users-gear"></i> Customer Segments & Repeat
+          </div>
+        </div>
+
+        <!-- Conversation History Thread -->
+        <div class="chat-thread" id="chat-thread">
+          <div class="chat-bubble assistant">
+            <h3>◈ مرحباً بكم في المساعد الاستراتيجي والتحليلي لمجموعة الشرنوبي</h3>
+            <p>أنا متصل مباشرة بقواعد البيانات التشغيلية للشركات التابعة: <b>LEO MODA، LEO TEX، LEO PRINT، و LEO PRODUCTION HUB</b>.</p>
+            <p>يمكنني الإجابة بدقة وتحليل معمق على الأسئلة المالية والتشغيلية:</p>
+            <ul>
+              <li><b>هوامش وقنوات البيع:</b> مقارنة ربحية الجملة بالتجزئة وأثر سياسات الخصومات.</li>
+              <li><b>سلاسل الإمداد والمخزون:</b> الأصناف الحرجة ذات التغطية الأقل من 20 يوماً وتفادي النفاد.</li>
+              <li><b>كفاءة التصنيع والجودة:</b> اختناقات خطوط الإنتاج ونسب الهدر وتكاليف العيوب.</li>
+              <li><b>العائد التسويقي وشرائح العملاء:</b> مقارنة ROAS بين المنصات ونسب ولاء العملاء (RFM).</li>
+            </ul>
+            <blockquote>🔒 تنبيه مؤسسي: الاستفسارات العامة أو غير المرتبطة بعمليات الشركة يتم استبعادها تلقائياً للحفاظ على الخصوصية والتركيز التنفيذي.</blockquote>
+          </div>
+        </div>
+
+        <!-- Chat Input Form -->
+        <form class="chat-input-wrapper" id="chat-form">
+          <input type="text" id="chat-input" placeholder="اسأل أي سؤال تحليلي حول أداء الشركة (مثال: ما هي القناة الأكثر ربحية؟ أو ما هي الأصناف المعرضة للنفاد؟)..." autocomplete="off">
+          <button type="submit" class="btn-send-chat" id="btn-submit-chat">
+            <i class="fa-solid fa-paper-plane"></i>
+          </button>
+        </form>
+
+      </div>
+    </section>
+
+  </main>
+
+</div>
+
+<!-- Application Logic -->
+<script src="/static/app.js"></script>
+</body>
+</html>
