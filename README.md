@@ -126,15 +126,3 @@ Once running, access the services:
 - **AI / LLM Integration**: [Google Gemini API](https://ai.google.dev/) (via REST endpoint with structured enterprise context injection)
 - **Data Science / EDA**: Jupyter Notebook
 
----
-
-## 🔒 Security & Best Practices
-
-- **API Keys**: Never commit your active API keys or `.env` files to GitHub. Always use `.env.example` as a template and ensure `.env` is listed in `.gitignore`.
-- **Large Data Files**: If uploading to GitHub, ensure large CSV/Parquet files exceeding 100MB are tracked using [Git LFS (Large File Storage)](https://git-lfs.github.com/) or hosted separately.
-
----
-
-## 📄 License
-
-This project is proprietary and intended for internal use by **El-Sharnouby Group**. All rights reserved.
