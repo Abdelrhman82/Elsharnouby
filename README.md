@@ -51,9 +51,6 @@ The platform bridges real-time business intelligence across multi-channel retail
 │   ├── app.js                 # State management, Chart.js renderers & API client
 │   └── logo/                  # Corporate assets & brand emblem
 ├── ELsharnouby_Analysis.ipynb # Jupyter Notebook with exploratory data analysis (EDA)
-├── requirements.txt           # Python dependencies
-├── .env.example               # Template for environment configuration
-└── .gitignore                 # Standard repository ignore rules
 ```
 
 ---
